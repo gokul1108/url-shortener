@@ -123,21 +123,17 @@ app.get("/:shortId", async (req, res) => {
       if(!urlEntry){
         return res.status(404).json({message:"URL not Found"});
       }
-      originalUrl = JSON.stringify({urlId:urlEntry.id,originalUrl:urlEntry.originalUrl});
-      await redisClient.set(`url:${shortId}`,originalUrl,{ EX:3600 });
+      originalUrl = JSON.stringify({originalUrl: urlEntry.originalUrl});
+      await redisClient.set(`url:${shortId}`,originalUrl,"EX",3600);
     }
     const parsedUrl = JSON.parse(originalUrl);
 
     await redisClient.incr(`clicks:${shortId}`);
-    const analyticsData = JSON.stringify({
-      urlId:parsedUrl.urlId
-    });
-    await redisClient.lPush(`analytics:${shortId}`,analyticsData);
+    await redisClient.expire(`clicks:${shortId}`, 3600);
 
     return res.redirect(parsedUrl.originalUrl);
   } catch (error) {
         return res.status(500).json({ error });
-
   }
 });
 

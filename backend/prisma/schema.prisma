@@ -25,15 +25,7 @@ model Urls {
   createdAt   DateTime @default(now())
   user        Users    @relation(fields: [userId], references: [id])
   clickCount  Int      @default(0)
-  urlAnalytics UrlAnalytics[]
   
-}
-
-model UrlAnalytics {
-  id        Int      @id @default(autoincrement())
-  urlId     Int
-  accessAt  DateTime @default(now())
-  url       Urls     @relation(fields: [urlId], references: [id])
 }
 
 

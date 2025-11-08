@@ -1,9 +1,9 @@
-import { createClient } from "redis";
+import {Redis} from 'ioredis';
 
-const redisClient = createClient();
+const redisClient = new Redis();
 
 try{
-    await redisClient.connect();
+    
     console.log("Redis connected successfully");
 
 
